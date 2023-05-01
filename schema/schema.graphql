@@ -1,0 +1,40 @@
+
+enum Role {
+  USER
+  ADMIN
+}
+
+interface IdentifiableById {
+  id: Int!
+}
+
+type CV implements IdentifiableById {
+  id: Int!
+  name: String!
+  age: String!
+  job: String!
+  skills: [Skill]!
+  user: User!
+}
+
+type Skill implements IdentifiableById {
+  id: Int!
+  designation: String!
+  cvs: [CV]!
+}
+
+type User implements IdentifiableById {
+  id: Int!
+  name: String!
+  email: String!
+  role: Role!
+  cvs: [CV]!
+}
+
+type Query {
+    retrieveId: String!
+}
+
+type Mutation {
+    getId: String!
+}
