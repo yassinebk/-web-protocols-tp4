@@ -3,7 +3,6 @@ import { context } from "../context";
 
 const Query = {
     allCVs: (_, __, context) => {
-
         const { db } = context;
         return db.cvs;
     },

@@ -6,20 +6,20 @@ interface CV extends IdentifiableById {
   name: string;
   age: string;
   job: string;
-  skills: Skill[];
-  user: User;
+  skills: number[];
+  userId: number;
 }
 
 interface Skill extends IdentifiableById {
   designation: string;
-  cvs: CV[];
+  cvs: number[];
 }
 
 interface User extends IdentifiableById {
   name: string;
   email: string;
   role: Role;
-  cvs: CV[];
+  cvs: number[];
 }
 
 enum Role {
@@ -57,23 +57,23 @@ const cvs: CV[] = [
     name: "John Doe",
     age: "30",
     job: "JavaScript Developer",
-    skills: [skills[0]],
-    user: users[0],
+    skills: [skills[0].id],
+    userId: users[0].id,
   },
   {
     id: 2,
     name: "Jane Doe",
     age: "25",
     job: "Java Developer",
-    skills: [skills[1]],
-    user: users[1],
+    skills: [skills[1].id],
+    userId: users[1].id,
   },
 ];
 
-skills[0].cvs.push(cvs[0]);
-skills[1].cvs.push(cvs[1]);
-users[0].cvs.push(cvs[0]);
-users[1].cvs.push(cvs[1]);
+skills[0].cvs.push(cvs[0].id);
+skills[1].cvs.push(cvs[1].id);
+users[0].cvs.push(cvs[0].id);
+users[1].cvs.push(cvs[1].id);
 
 
 export const db = {

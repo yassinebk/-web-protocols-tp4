@@ -4,7 +4,7 @@ const Mutation = {
   createCV: (_parent:never, { input }:any, { pubSub, db }: typeof context) => {
     const { name, age, job, skillIds, userId } = input;
     const id = db.cvs.length + 1;
-    const skills = db.skills.filter((skill) => skillIds.includes(skill.id));
+    const skills = db.skills.filter((skill) => skillIds.includes(skill.id)).map(s=>s.id)
     const user = db.users.find((user) => user.id === userId);
     if (!user) {
       throw new Error(`User with ID ${userId} not found.`);
@@ -16,7 +16,7 @@ const Mutation = {
       age,
       job,
       skills,
-      user,
+      userId:user.id,
     };
     db.cvs.push(newCV);
 
@@ -41,8 +41,8 @@ const Mutation = {
       name: name ?? db.cvs[cvIndex].name,
       age: age ?? db.cvs[cvIndex].age,
       job: job ?? db.cvs[cvIndex].job,
-      skills,
-      user,
+      skills:skills.map(s=>s.id),
+      user:user.id,
     };
     db.cvs[cvIndex] = updatedCV;
     pubSub.publish('CVUpdates',updatedCV);
@@ -60,16 +60,16 @@ const Mutation = {
       if (cvSkill.id === id) {
         const skillIndex = db.skills.findIndex((skill) => skill.id === cvSkill.id);
         if (skillIndex !== -1) {
-          db.skills[skillIndex].cvs = db.skills[skillIndex].cvs.filter((cv) => cv.id !== id);
+          db.skills[skillIndex].cvs = db.skills[skillIndex].cvs.filter((cvId) => cvId !== id);
         }
       }
     });
     db.skills = db.skills.filter((cvSkill) => cvSkill.id !== id);
 
     // Remove the CV from the user's CVs
-    const userIndex = db.users.findIndex((user) => user.id === deletedCV.user.id);
+    const userIndex = db.users.findIndex((user) => user.id === deletedCV.userId);
     if (userIndex !== -1) {
-      db.users[userIndex].cvs = db.users[userIndex].cvs.filter((cv) => cv.id !== id);
+      db.users[userIndex].cvs = db.users[userIndex].cvs.filter((cvId) => cvId !== id);
     }
 
     pubSub.publish('CVUpdates',deletedCV);
