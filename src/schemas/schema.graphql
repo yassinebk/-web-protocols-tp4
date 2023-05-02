@@ -1,4 +1,3 @@
-
 enum Role {
   USER
   ADMIN
@@ -32,9 +31,35 @@ type User implements IdentifiableById {
 }
 
 type Query {
-    retrieveId: String!
+  allCVs: [CV]!
+  oneCV(id: Int!): CV
+  allSkills: [Skill]!
+}
+
+input CreateCVInput {
+  name: String!
+  age: String!
+  job: String!
+  skillIds: [Int]!
+  userId: Int!
+}
+
+input UpdateCVInput {
+  id: Int!
+  name: String
+  age: String
+  job: String
+  skillIds: [Int]
+  userId: Int
 }
 
 type Mutation {
-    getId: String!
+  createCV(input: CreateCVInput!): CV
+  updateCV(id: Int!, input: UpdateCVInput!): CV
+  deleteCV(id: Int!): Boolean!
+}
+
+type Subscription {
+  CVUpdates: CV!
+
 }
